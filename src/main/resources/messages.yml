@@ -1,0 +1,11 @@
+message:
+  interaction_created: "<green>Interaction '{0}' created successfully!</green>"
+  interaction_deleted: "<red>Interaction '{0}' deleted successfully!</red>"
+  interaction_not_found: "<red>Interaction '{0}' not found!</red>"
+  interaction_resized_horizontal: "<yellow>Interaction '{0}' horizontal size set to {1}!</yellow>"
+  interaction_resized_vertical: "<yellow>Interaction '{0}' vertical size set to {1}!</yellow>"
+  config_reloaded: "<green>Configuration reloaded!</green>"
+  no_permission: "<red>You don't have permission to use this command!</red>"
+  only_players: "<red>Only players can use this command!</red>"
+  invalid_number: "<red>Invalid number: {0}</red>"
+  interaction_already_exists: "<red>Interaction '{0}' already exists!</red>"
