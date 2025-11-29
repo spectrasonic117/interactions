@@ -3,6 +3,7 @@ package com.spectrasonic.interactions.listeners;
 import com.spectrasonic.Utils.CommandUtils;
 import com.spectrasonic.interactions.Main;
 import lombok.RequiredArgsConstructor;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Interaction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,8 +36,20 @@ public class InteractionListener implements Listener {
             return; // No command set
         }
 
-        // Execute the command as the player
-        CommandUtils.PlayerCommand(player, command);
+        // Parse placeholders if PlaceholderAPI is enabled
+        if (plugin.isPlaceholderAPIEnabled()) {
+            command = PlaceholderAPI.setPlaceholders(player, command);
+        }
+
+        // Check if command should be executed as console
+        boolean commandAsConsole = plugin.getConfigManager().getConfig().getBoolean("interactions." + interactionName + ".command_as_console");
+
+        // Execute the command as console or player
+        if (commandAsConsole) {
+            CommandUtils.ConsoleCommand(command);
+        } else {
+            CommandUtils.PlayerCommand(player, command);
+        }
 
         // Cancel the event to prevent default interaction
         event.setCancelled(true);

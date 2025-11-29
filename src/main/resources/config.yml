@@ -3,21 +3,23 @@
 
 # Lista de interacciones
 interactions:
-  # Ejemplo de interacción (borrar después de probar)
-  # example:
-  #   uuid: "123e4567-e89b-12d3-a456-426614174000"
-  #   location:
-  #     world: "world"
-  #     x: 0.0
-  #     y: 64.0
-  #     z: 0.0
-  #   width: 1.0
-  #   height: 1.0
-  #   responsive: true
-  #   command: "say Hello World!"
+    # Ejemplo de interacción (borrar después de probar)
+    # example:
+    #   uuid: "123e4567-e89b-12d3-a456-426614174000"
+    #   location:
+    #     world: "world"
+    #     x: 0.0
+    #     y: 64.0
+    #     z: 0.0
+    #   width: 1.0
+    #   height: 1.0
+    #   responsive: true
+    #   command_as_console: false
+    #   command: "say Hello World!"
 
 # Configuración general
 settings:
-  default_width: 1.0
-  default_height: 1.0
-  default_responsive: true
+    default_width: 1.0
+    default_height: 1.0
+    default_responsive: true
+    default_command_as_console: false

@@ -24,6 +24,7 @@ public final class Main extends JavaPlugin {
     private MessagesManager messagesManager;
     private CommandManager commandManager;
     private EventManager eventManager;
+    private boolean placeholderAPIEnabled;
 
     @Override
     public void onLoad() {
@@ -39,6 +40,9 @@ public final class Main extends JavaPlugin {
         this.messagesManager = new MessagesManager(this);
         this.commandManager = new CommandManager(this);
         this.eventManager = new EventManager(this);
+
+        // Check for PlaceholderAPI
+        this.placeholderAPIEnabled = getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
 
         CommandUtils.setPlugin(this);
         MessageUtils.sendStartupMessage(this);
@@ -67,6 +71,7 @@ public final class Main extends JavaPlugin {
                 float width = (float) configManager.getConfig().getDouble("interactions." + name + ".width");
                 float height = (float) configManager.getConfig().getDouble("interactions." + name + ".height");
                 boolean responsive = configManager.getConfig().getBoolean("interactions." + name + ".responsive");
+                String uuidStr = configManager.getConfig().getString("interactions." + name + ".uuid");
 
                 org.bukkit.World world = getServer().getWorld(worldName);
                 if (world == null) {
@@ -74,16 +79,34 @@ public final class Main extends JavaPlugin {
                     continue;
                 }
 
-                Location location = new Location(world, x, y, z);
-                Interaction interaction = (Interaction) world.spawnEntity(location, EntityType.INTERACTION);
+                Interaction interaction = null;
 
+                // Check if entity already exists by UUID
+                if (uuidStr != null) {
+                    try {
+                        java.util.UUID uuid = java.util.UUID.fromString(uuidStr);
+                        interaction = (Interaction) world.getEntities().stream()
+                                .filter(entity -> entity.getUniqueId().equals(uuid) && entity instanceof Interaction)
+                                .findFirst()
+                                .orElse(null);
+                    } catch (IllegalArgumentException e) {
+                        // Invalid UUID, will spawn new
+                    }
+                }
+
+                if (interaction == null) {
+                    // Spawn new interaction
+                    Location location = new Location(world, x, y, z);
+                    interaction = (Interaction) world.spawnEntity(location, EntityType.INTERACTION);
+                    // Update UUID in config
+                    configManager.getConfig().set("interactions." + name + ".uuid", interaction.getUniqueId().toString());
+                    configManager.saveConfig();
+                }
+
+                // Update properties
                 interaction.setInteractionWidth(width);
                 interaction.setInteractionHeight(height);
                 interaction.setResponsive(responsive);
-
-                // Update UUID in config if it changed (e.g., after restart)
-                configManager.getConfig().set("interactions." + name + ".uuid", interaction.getUniqueId().toString());
-                configManager.saveConfig();
 
             } catch (Exception e) {
                 getLogger().severe("Failed to load interaction '" + name + "': " + e.getMessage());

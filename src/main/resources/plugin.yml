@@ -1,5 +1,7 @@
 name: interactions
-version: '${version}'
+api: "1.21"
+version: "${version}"
 main: com.spectrasonic.interactions.Main
-api-version: '1.21'
+api-version: "1.21"
 authors: [Spectrasonic]
+softdepend: [PlaceholderAPI]

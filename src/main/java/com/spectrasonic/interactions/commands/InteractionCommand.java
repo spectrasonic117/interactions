@@ -69,6 +69,7 @@ public class InteractionCommand {
         double defaultHeight = plugin.getConfigManager().getConfig().getDouble("settings.default_height", 1.0);
         boolean defaultResponsive = plugin.getConfigManager().getConfig().getBoolean("settings.default_responsive",
                 true);
+        boolean defaultCommandAsConsole = plugin.getConfigManager().getConfig().getBoolean("settings.default_command_as_console", false);
 
         interaction.setInteractionWidth((float) defaultWidth);
         interaction.setInteractionHeight((float) defaultHeight);
@@ -85,6 +86,7 @@ public class InteractionCommand {
         plugin.getConfigManager().getConfig().set("interactions." + name + ".width", defaultWidth);
         plugin.getConfigManager().getConfig().set("interactions." + name + ".height", defaultHeight);
         plugin.getConfigManager().getConfig().set("interactions." + name + ".responsive", defaultResponsive);
+        plugin.getConfigManager().getConfig().set("interactions." + name + ".command_as_console", defaultCommandAsConsole);
         plugin.getConfigManager().getConfig().set("interactions." + name + ".command", ""); // Empty command by default
 
         plugin.getConfigManager().saveConfig();
