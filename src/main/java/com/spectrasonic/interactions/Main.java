@@ -4,9 +4,8 @@ import com.spectrasonic.interactions.managers.CommandManager;
 import com.spectrasonic.interactions.managers.ConfigManager;
 import com.spectrasonic.interactions.managers.EventManager;
 import com.spectrasonic.interactions.managers.MessagesManager;
+import com.spectrasonic.interactions.services.UseLimitService;
 
-import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -24,22 +23,18 @@ public final class Main extends JavaPlugin {
     private MessagesManager messagesManager;
     private CommandManager commandManager;
     private EventManager eventManager;
+    private UseLimitService useLimitService;
     private boolean placeholderAPIEnabled;
-
-    @Override
-    public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
-    }
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        CommandAPI.onEnable();
 
         this.configManager = new ConfigManager(this);
         this.messagesManager = new MessagesManager(this);
         this.commandManager = new CommandManager(this);
         this.eventManager = new EventManager(this);
+        this.useLimitService = new UseLimitService(this);
 
         // Check for PlaceholderAPI
         this.placeholderAPIEnabled = getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
@@ -53,7 +48,6 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        CommandAPI.onDisable();
         MessageUtils.sendShutdownMessage(this);
     }
 
@@ -99,7 +93,8 @@ public final class Main extends JavaPlugin {
                     Location location = new Location(world, x, y, z);
                     interaction = (Interaction) world.spawnEntity(location, EntityType.INTERACTION);
                     // Update UUID in config
-                    configManager.getConfig().set("interactions." + name + ".uuid", interaction.getUniqueId().toString());
+                    configManager.getConfig().set("interactions." + name + ".uuid",
+                            interaction.getUniqueId().toString());
                     configManager.saveConfig();
                 }
 

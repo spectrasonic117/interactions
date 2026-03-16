@@ -13,6 +13,7 @@ interactions:
     #     z: 0.0
     #   width: 1.0
     #   height: 1.0
+    #   limit_use: 5
     #   responsive: true
     #   command_as_console: false
     #   command: "say Hello World!"
@@ -23,3 +24,4 @@ settings:
     default_height: 1.0
     default_responsive: true
     default_command_as_console: false
+    default_limit_use: -1 # -1 = sin límite, 0 = no se puede usar, >0 = límite de usos
