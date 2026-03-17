@@ -8,6 +8,9 @@ import com.spectrasonic.interactions.services.UseLimitService;
 
 import lombok.Getter;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.World;
+import java.util.UUID;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Interaction;
 
@@ -73,40 +76,67 @@ public final class Main extends JavaPlugin {
                     continue;
                 }
 
+                Location location = new Location(world, x, y, z);
                 Interaction interaction = null;
 
-                // Check if entity already exists by UUID
+                // Primero buscar por UUID almacenado (método más eficiente)
                 if (uuidStr != null) {
                     try {
-                        java.util.UUID uuid = java.util.UUID.fromString(uuidStr);
-                        interaction = (Interaction) world.getEntities().stream()
-                                .filter(entity -> entity.getUniqueId().equals(uuid) && entity instanceof Interaction)
-                                .findFirst()
-                                .orElse(null);
+                        UUID uuid = UUID.fromString(uuidStr);
+                        Entity entity = getServer().getEntity(uuid);
+                        if (entity instanceof Interaction && entity.getWorld().equals(world)) {
+                            interaction = (Interaction) entity;
+                        }
                     } catch (IllegalArgumentException e) {
-                        // Invalid UUID, will spawn new
+                        // UUID inválido, continuar con búsqueda por ubicación
                     }
                 }
 
+                // Si no se encontró por UUID, buscar por ubicación cercana
                 if (interaction == null) {
-                    // Spawn new interaction
-                    Location location = new Location(world, x, y, z);
+                    interaction = findInteractionAtLocation(world, location);
+                }
+
+                // Si aún no se encontró, crear nueva entidad
+                if (interaction == null) {
                     interaction = (Interaction) world.spawnEntity(location, EntityType.INTERACTION);
-                    // Update UUID in config
+                    // Actualizar UUID en config
                     configManager.getConfig().set("interactions." + name + ".uuid",
                             interaction.getUniqueId().toString());
                     configManager.saveConfig();
+                    getLogger().info("Created new interaction '" + name + "' at " + location);
+                } else {
+                    getLogger()
+                            .info("Loaded existing interaction '" + name + "' with UUID " + interaction.getUniqueId());
                 }
 
-                // Update properties
+                // Actualizar propiedades
                 interaction.setInteractionWidth(width);
                 interaction.setInteractionHeight(height);
                 interaction.setResponsive(responsive);
 
             } catch (Exception e) {
                 getLogger().severe("Failed to load interaction '" + name + "': " + e.getMessage());
+                e.printStackTrace();
             }
         }
+    }
+
+    // Busca una entidad Interaction en una ubicación específica con un radio
+    // pequeño
+    private Interaction findInteractionAtLocation(World world, Location location) {
+        final double SEARCH_RADIUS = 0.5; // Radio de búsqueda en bloques
+
+        return world.getEntitiesByClass(Interaction.class).stream()
+                .filter(entity -> {
+                    Location entityLoc = entity.getLocation();
+                    return entityLoc.getWorld().equals(location.getWorld()) &&
+                            Math.abs(entityLoc.getX() - location.getX()) <= SEARCH_RADIUS &&
+                            Math.abs(entityLoc.getY() - location.getY()) <= SEARCH_RADIUS &&
+                            Math.abs(entityLoc.getZ() - location.getZ()) <= SEARCH_RADIUS;
+                })
+                .findFirst()
+                .orElse(null);
     }
 
 }
