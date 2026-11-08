@@ -1,0 +1,27 @@
+# Configuración del plugin Interactions
+# Este archivo guarda todas las entidades Interaction creadas
+
+# Lista de interacciones
+interactions:
+    # Ejemplo de interacción (borrar después de probar)
+    # example:
+    #   uuid: "123e4567-e89b-12d3-a456-426614174000"
+    #   location:
+    #     world: "world"
+    #     x: 0.0
+    #     y: 64.0
+    #     z: 0.0
+    #   width: 1.0
+    #   height: 1.0
+    #   limit_use: 5
+    #   responsive: true
+    #   command_as_console: false
+    #   command: "warp pvp %player%"  # %player% = jugador que interactúa
+
+# Configuración general
+settings:
+    default_width: 1.0
+    default_height: 1.0
+    default_responsive: true
+    default_command_as_console: false
+    default_limit_use: -1 # -1 = sin límite, 0 = no se puede usar, >0 = límite de usos

@@ -1,6 +1,7 @@
 package com.spectrasonic.interactions.managers;
 
 import com.spectrasonic.interactions.Main;
+import com.spectrasonic.interactions.commands.InteractionCommand;
 import lombok.Getter;
 
 @Getter
@@ -14,6 +15,6 @@ public class CommandManager {
     }
 
     private void registerCommands() {
-        // Register commands here
+        new InteractionCommand(plugin).getCommand().register();
     }
 }
