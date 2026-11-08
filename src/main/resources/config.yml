@@ -16,7 +16,7 @@ interactions:
     #   limit_use: 5
     #   responsive: true
     #   command_as_console: false
-    #   command: "say Hello World!"
+    #   command: "warp pvp %player%"  # %player% = jugador que interactúa
 
 # Configuración general
 settings:

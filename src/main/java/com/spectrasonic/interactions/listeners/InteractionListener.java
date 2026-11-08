@@ -50,6 +50,9 @@ public class InteractionListener implements Listener {
             command = PlaceholderAPI.setPlaceholders(player, command);
         }
 
+        // Built-in placeholder (PAPI has no %player%, it is %player_name%)
+        command = command.replace("%player%", player.getName());
+
         // Check if command should be executed as console
         boolean commandAsConsole = plugin.getConfigManager().getConfig()
                 .getBoolean("interactions." + interactionName + ".command_as_console");
